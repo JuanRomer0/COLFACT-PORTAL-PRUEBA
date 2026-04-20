@@ -13,7 +13,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const LoginPage = () => {
-  const navigate = useNavigate(); // ✅ DENTRO
+  const navigate = useNavigate();
   const { login, isLoading } = useAuth();
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const LoginPage = () => {
     if (token) {
       navigate("/");
     }
-  }, [navigate]); // ✅ correcto
+  }, [navigate]);
 
   const {
     register,
@@ -33,7 +33,10 @@ const LoginPage = () => {
 
   const onSubmit = (data: FormData) => {
     login(data, {
-      onSuccess: () => navigate("/"),
+      onSuccess: () => {
+        console.log("LOGIN OK");
+        navigate("/");
+      },
     });
   };
 
@@ -80,4 +83,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-

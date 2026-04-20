@@ -9,7 +9,15 @@ import { worker } from "./mocks/browser";
 
 async function enableMocking() {
   await worker.start({
-    onUnhandledRequest: "bypass",
+    onUnhandledRequest(req) {
+  const url = new URL(req.url);
+
+  if (!url.pathname.startsWith("/api")) {
+    return;
+  }
+
+  console.warn("Unhandled API request:", url.href);
+},
   });
 }
 
