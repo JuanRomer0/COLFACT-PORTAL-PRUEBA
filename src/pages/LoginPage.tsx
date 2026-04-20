@@ -5,17 +5,6 @@ import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-
-
-const navigate = useNavigate();
-
-useEffect(() => {
-  const token = localStorage.getItem("accessToken");
-  if (token) {
-    navigate("/");
-  }
-}, []);
-
 const schema = z.object({
   userName: z.string().min(1, "Usuario requerido"),
   password: z.string().min(1, "Contraseña requerida"),
@@ -24,7 +13,15 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const LoginPage = () => {
+  const navigate = useNavigate(); // ✅ DENTRO
   const { login, isLoading } = useAuth();
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      navigate("/");
+    }
+  }, [navigate]); // ✅ correcto
 
   const {
     register,
@@ -36,7 +33,7 @@ const LoginPage = () => {
 
   const onSubmit = (data: FormData) => {
     login(data, {
-        onSuccess: () => navigate("/"),
+      onSuccess: () => navigate("/"),
     });
   };
 
@@ -83,5 +80,4 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
 
